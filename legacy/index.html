@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voicely - BPO Customer Simulation & QA Audit Tool</title>
+  <meta name="description" content="Realistic interactive voice-and-text call simulator for Moneycontrol and L&T Finance Personal Loan agent onboarding and training.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Hidden SVG Sprite Sheet for UI Icons -->
+  <svg style="display: none;">
+    <symbol id="icon-phone" viewBox="0 0 24 24">
+      <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+    </symbol>
+    <symbol id="icon-mic" viewBox="0 0 24 24">
+      <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+    </symbol>
+    <symbol id="icon-mute" viewBox="0 0 24 24">
+      <path d="M16.5 12c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4zm2.5 0c0 3.07-1.9 5.7-4.6 6.76l1.24 1.24c3.48-1.56 5.86-5.01 5.86-9 0-3.99-2.38-7.44-5.86-9l-1.24 1.24C17.1 6.3 19 8.93 19 12zM3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.25-2.5-4.01v8.01c1.48-.76 2.5-2.24 2.5-4zm-4.5 4V8l-3 3H5v2h3l3 3z"/>
+    </symbol>
+    <symbol id="icon-send" viewBox="0 0 24 24">
+      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24">
+      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+    </symbol>
+    <symbol id="icon-warning" viewBox="0 0 24 24">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+    </symbol>
+    <symbol id="icon-arrow-down" viewBox="0 0 24 24">
+      <path d="M7 10l5 5 5-5z"/>
+    </symbol>
+    <symbol id="icon-user" viewBox="0 0 24 24">
+      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+    </symbol>
+    <symbol id="icon-bulb" viewBox="0 0 24 24">
+      <path d="M12 2C7.58 2 4 5.58 4 10c0 2.21.89 4.21 2.34 5.66L7 17h10l.66-1.34C19.11 14.21 20 12.21 20 10c0-4.42-3.58-8-8-8zm1 17h-2v2h2v-2zm-3-4.5c.34-.34.5-.78.5-1.25V11c0-.55-.45-1-1-1s-1 .45-1 1v2.25c0 .47.16.91.5 1.25l1 1zm5.5 0l1-1c.34-.34.5-.78.5-1.25V11c0-.55-.45-1-1-1s-1 .45-1 1v2.25c0 .47.16.91.5 1.25z"/>
+    </symbol>
+    <symbol id="icon-audio" viewBox="0 0 24 24">
+      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+    </symbol>
+    <symbol id="icon-dashboard" viewBox="0 0 24 24">
+      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14H5v-2h6v2zm8-4H5v-2h14v2zm0-4H5V7h14v2z"/>
+    </symbol>
+  </svg>
+
+  <header>
+    <div class="logo-container">
+      <div class="logo-icon">
+        <svg><use href="#icon-phone"></use></svg>
+      </div>
+      <div>
+        <span class="logo-text">Voicely</span>
+        <span class="logo-tagline">BPO Trainer</span>
+      </div>
+    </div>
+    <div class="header-status">
+      <div class="status-badge">
+        <div class="status-dot" id="system-status-dot"></div>
+        <span id="system-status-text">Standby</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Left Column: Call Console -->
+    <section class="panel simulator-console" id="console-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">
+          <svg><use href="#icon-phone"></use></svg> Call Simulator
+        </h2>
+        <span class="panel-sub-label" id="ai-status-label" style="color: var(--color-success); font-weight: 700;">Local Simulator Mode</span>
+      </div>
+
+      <!-- Config Section -->
+      <div class="persona-selector" style="width: 100%;">
+        <label class="panel-sub-label" for="persona-select">Choose Customer Persona</label>
+        <select class="select-dropdown" id="persona-select" style="width: 100%;">
+          <option value="suresh" selected>Jignesh Rathod (Pending App / Hindi)</option>
+          <option value="ramesh">Ramesh Kumar (Impatient / Hinglish)</option>
+          <option value="priya">Priya Sharma (Polite / English)</option>
+        </select>
+      </div>
+
+      <!-- Phone Ringing & Conversation Display -->
+      <div class="phone-interface" id="phone-ui">
+        <div class="caller-card">
+          <div class="avatar-wrapper">
+            <div class="avatar" id="avatar-icon">
+              <svg><use href="#icon-user"></use></svg>
+            </div>
+            <div class="avatar-rings"></div>
+          </div>
+          <h3 class="caller-name" id="caller-name">Jignesh Rathod</h3>
+          <p class="caller-subtitle" id="caller-details">Loan Range: ₹10L | Pending application</p>
+        </div>
+
+        <div class="call-timer" id="timer-display">00:00</div>
+
+        <!-- Animated Waveform -->
+        <div class="waveform-container" id="waveform">
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+          <div class="wave-bar"></div>
+        </div>
+
+        <!-- Live Subtitles -->
+        <div id="live-subtitle" style="font-size: 0.85rem; font-style: italic; color: var(--color-primary); min-height: 48px; text-align: center; margin: 0.5rem 0; padding: 0 1rem; line-height: 1.4; display: flex; align-items: center; justify-content: center; width: 100%;">[Phone Off-hook]</div>
+
+        <!-- Controls -->
+        <div class="call-controls">
+          <button class="btn-circle btn-start-call" id="btn-dial" title="Start Simulation Dialing">
+            <svg><use href="#icon-phone"></use></svg>
+          </button>
+          <button class="btn-circle btn-end-call" id="btn-hangup" title="End Simulation Call" style="display:none;">
+            <svg><use href="#icon-mute"></use></svg>
+          </button>
+          <button class="btn-circle btn-control-secondary" id="btn-toggle-input-mode" title="Toggle Voice/Text Mode">
+            <svg id="mode-icon"><use href="#icon-mic"></use></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Input Actions -->
+      <div class="input-console">
+        <!-- Voice Input Area -->
+        <div class="voice-input-container" id="voice-input-area">
+          <button class="btn-voice" id="btn-mic-trigger">
+            <svg><use href="#icon-mic"></use></svg> Talk Now
+          </button>
+          <span class="voice-status-text" id="voice-recognition-status">Click to speak response</span>
+        </div>
+
+        <!-- Text Input Area -->
+        <div class="chat-input-row" id="text-input-area" style="display:none;">
+          <input type="text" class="text-input-field" id="text-response-input" placeholder="Type your opening/response to the customer..." disabled>
+          <button class="btn-send" id="btn-send-text" disabled>
+            <svg><use href="#icon-send"></use></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Center Column: Real-time Compliance Auditor -->
+    <section class="panel auditor-monitor" id="auditor-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">
+          <svg><use href="#icon-check"></use></svg> QA Compliance Auditor
+        </h2>
+        <span class="panel-sub-label">Silent Monitor</span>
+      </div>
+
+      <!-- Live score meter -->
+      <div class="score-progress-wrapper">
+        <div class="score-progress-header">
+          <span class="score-progress-title">Live Score</span>
+          <span class="score-progress-value" id="live-compliance-score">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="live-progress-fill"></div>
+        </div>
+      </div>
+
+      <!-- Realtime Audit Checklist -->
+      <div class="audit-checklist" id="compliance-checklist">
+        <!-- Script Opener -->
+        <div class="checklist-item" id="chk-opener">
+          <div class="checklist-icon-holder">
+            <svg><use href="#icon-check"></use></svg>
+          </div>
+          <div class="checklist-info">
+            <span class="checklist-title">Opening Script Adherence</span>
+            <span class="checklist-desc">Greetings (Good morning/afternoon/evening), Self-Intro ("calling on behalf of Moneycontrol"), and Right Party Confirmation ("speaking with Mr. Jignesh?").</span>
+          </div>
+        </div>
+
+        <!-- Language Preference Check -->
+        <div class="checklist-item" id="chk-lang">
+          <div class="checklist-icon-holder">
+            <svg><use href="#icon-check"></use></svg>
+          </div>
+          <div class="checklist-info">
+            <span class="checklist-title">Language Consent</span>
+            <span class="checklist-desc">Ask preference ("In which Language are you comfortable Hindi or English ?").</span>
+          </div>
+        </div>
+
+        <!-- QA Disclosure -->
+        <div class="checklist-item" id="chk-disclosure">
+          <div class="checklist-icon-holder">
+            <svg><use href="#icon-check"></use></svg>
+          </div>
+          <div class="checklist-info">
+            <span class="checklist-title">Recording Consent &amp; Reason</span>
+            <span class="checklist-desc">State recording verbiage (English/Hindi disclaimer) and specify Reason for Calling (pending Moneycontrol L&T Finance loan application).</span>
+          </div>
+        </div>
+
+        <!-- Loan Amount & Rate -->
+        <div class="checklist-item" id="chk-product">
+          <div class="checklist-icon-holder">
+            <svg><use href="#icon-check"></use></svg>
+          </div>
+          <div class="checklist-info">
+            <span class="checklist-title">Starting Rate Details</span>
+            <span class="checklist-desc">Specify interest rates starting at 11% p.a. accurately without guarantee.</span>
+          </div>
+        </div>
+
+        <!-- Reducing Rate -->
+        <div class="checklist-item" id="chk-reducing">
+          <div class="checklist-icon-holder">
+            <svg><use href="#icon-check"></use></svg>
+          </div>
+          <div class="checklist-info">
+            <span class="checklist-title">Reducing Rate Explanation</span>
+            <span class="checklist-desc">Mention that L&T's interest rate is calculated on a reducing balance basis ("reducing basis").</span>
+          </div>
+        </div>
+
+        <!-- CIBIL and Eligibility -->
+        <div class="checklist-item" id="chk-cibil">
+          <div class="checklist-icon-holder">
+            <svg><use href="#icon-check"></use></svg>
+          </div>
+          <div class="checklist-info">
+            <span class="checklist-title">CIBIL &amp; Eligibility Factors</span>
+            <span class="checklist-desc">Explain that rates are customized based on CIBIL score, income, and other obligations.</span>
+          </div>
+        </div>
+
+        <!-- Loan Tenure Check -->
+        <div class="checklist-item" id="chk-tenure">
+          <div class="checklist-icon-holder">
+            <svg><use href="#icon-check"></use></svg>
+          </div>
+          <div class="checklist-info">
+            <span class="checklist-title">Flexible Tenure Explanation</span>
+            <span class="checklist-desc">Correctly state tenure limits between 12 months to 72 months (1-6 yrs).</span>
+          </div>
+        </div>
+
+        <!-- Pitch USPs (Objection Handling) -->
+        <div class="checklist-item" id="chk-usps">
+          <div class="checklist-icon-holder">
+            <svg><use href="#icon-check"></use></svg>
+          </div>
+          <div class="checklist-info">
+            <span class="checklist-title">Objection Handling &amp; USPs</span>
+            <span class="checklist-desc">Pitch 100% paperless process, 2-minute real-time approval, and zero hidden maintenance fees.</span>
+          </div>
+        </div>
+
+        <!-- Journey Explanation Check -->
+        <div class="checklist-item" id="chk-journey">
+          <div class="checklist-icon-holder">
+            <svg><use href="#icon-check"></use></svg>
+          </div>
+          <div class="checklist-info">
+            <span class="checklist-title">Journey Steps Explanation</span>
+            <span class="checklist-desc">Explain the onboarding steps (eKYC, Penny drop, VKYC, eSign, and disbursement timeline within 24-48 hours).</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Realtime alerts/errors feeds -->
+      <div class="alerts-feed" id="live-alerts">
+        <!-- Programmatic Warning / Fatal errors cards populate here -->
+      </div>
+    </section>
+
+    <!-- Right Column: Interactive Rebuttal Helper -->
+    <section class="panel rebuttal-advisor" id="rebuttal-panel">
+      <div class="panel-header">
+        <h2 class="panel-title">
+          <svg><use href="#icon-bulb"></use></svg> Rebuttal Advisor
+        </h2>
+        <span class="panel-sub-label">Agent Co-Pilot</span>
+      </div>
+
+      <!-- Product Rulebook reference -->
+      <div class="rulebook-card">
+        <div class="rulebook-header" id="rulebook-toggle">
+          <span>L&T FINANCE PRODUCT RULEBOOK</span>
+          <svg><use href="#icon-arrow-down"></use></svg>
+        </div>
+        <div class="rulebook-content" id="rulebook-data" style="display:none; max-height: 380px; overflow-y: auto; padding-right: 0.25rem;">
+          <div class="rule-row" style="background: rgba(255,255,255,0.03); padding: 0.5rem; border-radius: 8px; margin-bottom: 0.5rem;">
+            <span class="rule-label">Core Terms:</span>
+            <span class="rule-value">₹50K-30L | Starts @ 11% | 12-72m</span>
+          </div>
+          <div style="font-size: 0.75rem; font-weight: 700; color: var(--color-primary); margin-top: 0.75rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.25rem;">L&T 13-STEP ONBOARDING JOURNEY:</div>
+          <div style="font-size: 0.72rem; line-height: 1.5; color: var(--color-text-secondary); display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.5rem;">
+            <div><strong>1. Basic Details</strong>: Mobile, Aadhaar, PAN, Name, DOB, PIN, Income, Job details</div>
+            <div><strong>2. Offer Selection</strong>: Choose eligible Amount &amp; Tenure (up to 48m in portal)</div>
+            <div><strong>3. Loan Booster</strong>: Upload last 6m bank statements (Netbanking / AA / PDF)</div>
+            <div><strong>4. Offer Review</strong>: ROI, EMI, fees, disbursement details review</div>
+            <div><strong>5. Insurance (Optional)</strong>: General (up to 3 EMIs), Health, Life Coverage</div>
+            <div><strong>6. Digital eKYC</strong>: Aadhaar verification via DigiLocker OTP authentication</div>
+            <div><strong>7. Address Details</strong>: Current &amp; office address input and declarations</div>
+            <div><strong>8. Review &amp; Confirm</strong>: Key Fact Statement (KFS) review and confirmation</div>
+            <div><strong>9. Bank Details</strong>: Verify Account number, IFSC, Penny Drop (₹1 credited)</div>
+            <!-- Scrollbar track customization helper -->
+            <div><strong>10. e-Mandate Setup</strong>: Aadhaar OTP / UPI / Netbanking / Debit Card auto-pay</div>
+            <div><strong>11. Video KYC (VKYC)</strong>: Answer verification questions (DOB, PIN, Job, etc.)</div>
+            <div><strong>12. eSign Agreement</strong>: Digitally sign agreement with mobile OTP check</div>
+            <div><strong>13. Final Approval &amp; Disbursement</strong>: Funds released within 24 to 48 hours</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Co-Pilot Live Card -->
+      <div class="live-tips-wrapper">
+        <div class="tips-card" id="tips-box">
+          <h3 class="tip-title" id="tips-title">
+            <svg><use href="#icon-bulb"></use></svg> Standard Script Guide
+          </h3>
+          <p class="tip-body" id="tips-body">
+            Standby for call starting. Once dialing initiates, wait for the customer to pick up. Be prepared to introduce yourself exactly according to the opening script guidelines.
+          </p>
+          <div class="rebuttal-script-box" id="rebuttal-script">
+            No active prompt suggestion.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Post-Call Audit Dashboard Modal -->
+  <div class="audit-overlay" id="audit-modal-overlay">
+    <div class="audit-modal">
+      <div class="audit-modal-header">
+        <h1 class="audit-modal-title">Performance Audit Dashboard</h1>
+        <p class="caller-subtitle">Moneycontrol L&T Finance Personal Loan Simulation Summary</p>
+      </div>
+
+      <!-- Main Score Row -->
+      <div class="score-section">
+        <div class="score-radial">
+          <svg width="140" height="140">
+            <circle class="bg" cx="70" cy="70" r="60"/>
+            <circle class="progress" id="audit-radial-progress" cx="70" cy="70" r="60"/>
+          </svg>
+          <div class="score-text-overlay">
+            <span class="score-number" id="audit-score-number">0%</span>
+            <span class="score-lbl">Score</span>
+          </div>
+        </div>
+
+        <div class="score-stats">
+          <div class="stat-item">
+            <span class="stat-label">Opening Adherence:</span>
+            <span class="stat-val" id="audit-stat-opening">-</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Language Consultation:</span>
+            <span class="stat-val" id="audit-stat-language">-</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Recording Disclosure:</span>
+            <span class="stat-val" id="audit-stat-recording">-</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Fatal Errors Triggered:</span>
+            <span class="stat-val fail" id="audit-stat-errors">No</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit Grid Details -->
+      <div class="audit-grid">
+        <!-- Right side: Transcript Review -->
+        <div class="audit-section-box">
+          <h2 class="section-box-title">
+            <svg><use href="#icon-audio"></use></svg> Call Transcript Review
+          </h2>
+          <div class="audit-log-container" id="audit-transcript-logs">
+            <!-- Populated dynamically with dialog text bubble logs -->
+          </div>
+        </div>
+
+        <!-- Left side: Feedback & QA Comments -->
+        <div class="audit-section-box">
+          <h2 class="section-box-title">
+            <svg><use href="#icon-bulb"></use></svg> QA Feedback & Action Items
+          </h2>
+          <div class="audit-feedback-list" id="audit-feedback-list">
+            <!-- Structured bullets detailing recommendations based on omissions -->
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-primary" id="btn-restart-simulation">
+          <svg><use href="#icon-phone"></use></svg> Restart Training Call
+        </button>
+        <button class="btn-secondary" id="btn-close-audit">
+          Close Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

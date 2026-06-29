@@ -1,0 +1,33 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+web_modules/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+.turbo/
+.docusaurus/
+
+# Environment files and credentials
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env.json
+*.pem
+
+# Local databases and locks
+*.db
+*.db-journal
+*.sqlite
+dev.db
+dev.db-journal
+
+# Operating System files
+.DS_Store
+Thumbs.db
+*.log

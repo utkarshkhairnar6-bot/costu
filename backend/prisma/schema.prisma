@@ -1,0 +1,98 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   // hashed
+  name      String
+  role      String   @default("EMPLOYEE") // ADMIN, MANAGER, EMPLOYEE
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  calls     Call[]
+  managerId String?
+  manager   User?    @relation("ManagerAgents", fields: [managerId], references: [id])
+  agents    User[]   @relation("ManagerAgents")
+}
+
+model Persona {
+  id          String   @id @default(uuid())
+  name        String
+  details     String
+  language    String   // Hindi, English, Hinglish, Marathi, Gujarati
+  behavior    String   // Friendly, Angry, Impatient, Skeptical, etc.
+  systemPrompt String   
+  createdAt   DateTime @default(now())
+  calls       Call[]
+}
+
+model Call {
+  id             String         @id @default(uuid())
+  userId         String
+  user           User           @relation(fields: [userId], references: [id])
+  personaId      String
+  persona        Persona        @relation(fields: [personaId], references: [id])
+  duration       Int            // seconds
+  audioUrl       String?        // path in S3/local
+  overallScore   Int
+  fatalCount     Int
+  transcript     String         // Store stringified JSON array of dialogue bubbles
+  scorecard      Scorecard?
+  coaching       Coaching?
+  fatalErrors    FatalError[]
+  createdAt      DateTime       @default(now())
+}
+
+model FatalError {
+  id              String   @id @default(uuid())
+  callId          String
+  call            Call     @relation(fields: [callId], references: [id], onDelete: Cascade)
+  timestamp       Int      // seconds in call
+  category        String   // Wrong Interest Rate, False Commitment, Compliance Miss, etc.
+  severity        String   // Critical / Warning
+  employeeSaid    String   
+  reason          String   
+  correctResponse String   
+}
+
+model Scorecard {
+  id                 String   @id @default(uuid())
+  callId             String   @unique
+  call               Call     @relation(fields: [callId], references: [id], onDelete: Cascade)
+  communicationSkills Int
+  productKnowledge   Int
+  confidence         Int
+  listeningSkills    Int
+  objectionHandling  Int
+  compliance         Int
+  closingSkills      Int
+  professionalism    Int
+  summary            String   
+  strengths          String   
+  weaknesses         String   
+  managerNotes       String?  
+}
+
+model Coaching {
+  id             String   @id @default(uuid())
+  callId         String   @unique
+  call           Call     @relation(fields: [callId], references: [id], onDelete: Cascade)
+  feedback       String   // Store stringified JSON array of feedback lines
+  recommendations String  
+}
+
+model SopDocument {
+  id          String   @id @default(uuid())
+  title       String
+  category    String   // SOP, FAQ, Compliance, Recording
+  fileUrl     String
+  textContent String   
+  vectorId    String?  // matching Qdrant ID
+  createdAt   DateTime @default(now())
+}
